@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -43,9 +44,13 @@ export default function Home() {
           </div>
           <div className="md:w-1/2 flex justify-center">
             <div className="w-full max-w-md h-64 bg-white rounded-lg shadow-lg relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                <span className="text-gray-500 text-lg font-medium">Building Image Placeholder</span>
-              </div>
+              <Image 
+                src="/building-image.jpg" 
+                alt="ABC Apartments Building" 
+                fill 
+                className="object-cover"
+                priority
+              />
             </div>
           </div>
         </div>
