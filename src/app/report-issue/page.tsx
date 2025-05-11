@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, Suspense } from "react";
 
-export default function ReportIssue() {
+// Component that uses useSearchParams should be wrapped in Suspense
+function ReportIssueForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -110,6 +111,238 @@ export default function ReportIssue() {
   };
 
   return (
+    <div className="md:col-span-2">
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold">Issue Report Form</h2>
+          <div className="flex items-center">
+            <span className="text-sm text-gray-600 mr-2">Submit Method:</span>
+            <button
+              type="button"
+              onClick={toggleSubmitMethod}
+              className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ease-in-out duration-200 focus:outline-none ${
+                submitMethod === 'POST' ? 'bg-blue-600' : 'bg-gray-200'
+              }`}
+            >
+              <span
+                className={`inline-block w-4 h-4 transform transition ease-in-out duration-200 bg-white rounded-full ${
+                  submitMethod === 'POST' ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+            <span className="text-sm font-medium ml-2">
+              {submitMethod === 'POST' ? 'POST' : 'GET'}
+            </span>
+          </div>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                Your Name *
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className={`w-full p-2 border rounded-md ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder="John Smith"
+              />
+              {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+            </div>
+            
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email Address *
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={`w-full p-2 border rounded-md ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder="john.smith@example.com"
+              />
+              {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                placeholder="0400 123 456"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="lotNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                Lot Number *
+              </label>
+              <input
+                type="text"
+                id="lotNumber"
+                name="lotNumber"
+                value={formData.lotNumber}
+                onChange={handleChange}
+                className={`w-full p-2 border rounded-md ${errors.lotNumber ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder="e.g. 101"
+              />
+              {errors.lotNumber && <p className="mt-1 text-sm text-red-500">{errors.lotNumber}</p>}
+            </div>
+          </div>
+          
+          <div>
+            <label htmlFor="issueType" className="block text-sm font-medium text-gray-700 mb-1">
+              Issue Type *
+            </label>
+            <select
+              id="issueType"
+              name="issueType"
+              value={formData.issueType}
+              onChange={handleChange}
+              className={`w-full p-2 border rounded-md ${errors.issueType ? 'border-red-500' : 'border-gray-300'}`}
+            >
+              <option value="">Select Issue Type</option>
+              <option value="Maintenance">Maintenance</option>
+              <option value="Bylaw Breach">By-law Breach</option>
+              <option value="Noise Complaint">Noise Complaint</option>
+              <option value="Security Concern">Security Concern</option>
+              <option value="Common Area">Common Area Issue</option>
+              <option value="Other">Other</option>
+            </select>
+            {errors.issueType && <p className="mt-1 text-sm text-red-500">{errors.issueType}</p>}
+          </div>
+          
+          <div>
+            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+              Location
+            </label>
+            <input
+              type="text"
+              id="location"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              placeholder="e.g. Garage, Level 3 hallway, unit 101"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+              Description *
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows={4}
+              className={`w-full p-2 border rounded-md ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
+              placeholder="Please provide a detailed description of the issue..."
+            ></textarea>
+            {errors.description && <p className="mt-1 text-sm text-red-500">{errors.description}</p>}
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
+                Priority
+              </label>
+              <select
+                id="priority"
+                name="priority"
+                value={formData.priority}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="Low">Low</option>
+                <option value="Normal">Normal</option>
+                <option value="High">High</option>
+                <option value="Urgent">Urgent</option>
+              </select>
+            </div>
+            
+            <div>
+              <label htmlFor="preferredContact" className="block text-sm font-medium text-gray-700 mb-1">
+                Preferred Contact Method
+              </label>
+              <select
+                id="preferredContact"
+                name="preferredContact"
+                value={formData.preferredContact}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="Email">Email</option>
+                <option value="Phone">Phone</option>
+                <option value="Either">Either</option>
+              </select>
+            </div>
+          </div>
+          
+          <div>
+            <label htmlFor="attachFile" className="block text-sm font-medium text-gray-700 mb-1">
+              Attach Files (optional)
+            </label>
+            <input
+              type="file"
+              id="attachFile"
+              name="attachFile"
+              onChange={handleFileChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              accept="image/*,.pdf"
+            />
+            <p className="mt-1 text-sm text-gray-500">
+              You can attach photos or documents related to the issue (max 5MB)
+            </p>
+          </div>
+          
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="consent"
+              name="consent"
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+              required
+            />
+            <label htmlFor="consent" className="ml-2 block text-sm text-gray-700">
+              I consent to the collection and storage of the personal information provided in this form *
+            </label>
+          </div>
+          
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition ${
+                isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+            >
+              {isSubmitting ? 'Submitting...' : `Submit via ${submitMethod}`}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default function ReportIssue() {
+  return (
     <div className="min-h-screen flex flex-col">
       {/* Navigation */}
       <header className="bg-blue-700 text-white shadow-md">
@@ -141,235 +374,9 @@ export default function ReportIssue() {
           <p className="text-gray-600 mb-8">Use this form to report maintenance issues, by-law breaches, or other concerns</p>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="md:col-span-2">
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold">Issue Report Form</h2>
-                  <div className="flex items-center">
-                    <span className="text-sm text-gray-600 mr-2">Submit Method:</span>
-                    <button
-                      type="button"
-                      onClick={toggleSubmitMethod}
-                      className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ease-in-out duration-200 focus:outline-none ${
-                        submitMethod === 'POST' ? 'bg-blue-600' : 'bg-gray-200'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block w-4 h-4 transform transition ease-in-out duration-200 bg-white rounded-full ${
-                          submitMethod === 'POST' ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                    <span className="text-sm font-medium ml-2">
-                      {submitMethod === 'POST' ? 'POST' : 'GET'}
-                    </span>
-                  </div>
-                </div>
-                
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Personal Information */}
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                        Your Name *
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        className={`w-full p-2 border rounded-md ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
-                        placeholder="John Smith"
-                      />
-                      {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
-                    </div>
-                    
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className={`w-full p-2 border rounded-md ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-                        placeholder="john.smith@example.com"
-                      />
-                      {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
-                    </div>
-                  </div>
-                  
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                        Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        placeholder="0400 123 456"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label htmlFor="lotNumber" className="block text-sm font-medium text-gray-700 mb-1">
-                        Lot Number *
-                      </label>
-                      <input
-                        type="text"
-                        id="lotNumber"
-                        name="lotNumber"
-                        value={formData.lotNumber}
-                        onChange={handleChange}
-                        className={`w-full p-2 border rounded-md ${errors.lotNumber ? 'border-red-500' : 'border-gray-300'}`}
-                        placeholder="e.g. 101"
-                      />
-                      {errors.lotNumber && <p className="mt-1 text-sm text-red-500">{errors.lotNumber}</p>}
-                    </div>
-                  </div>
-                  
-                  {/* Issue Details */}
-                  <div>
-                    <label htmlFor="issueType" className="block text-sm font-medium text-gray-700 mb-1">
-                      Issue Type *
-                    </label>
-                    <select
-                      id="issueType"
-                      name="issueType"
-                      value={formData.issueType}
-                      onChange={handleChange}
-                      className={`w-full p-2 border rounded-md ${errors.issueType ? 'border-red-500' : 'border-gray-300'}`}
-                    >
-                      <option value="">Select Issue Type</option>
-                      <option value="Maintenance">Maintenance</option>
-                      <option value="Bylaw Breach">By-law Breach</option>
-                      <option value="Noise Complaint">Noise Complaint</option>
-                      <option value="Security Concern">Security Concern</option>
-                      <option value="Common Area">Common Area Issue</option>
-                      <option value="Other">Other</option>
-                    </select>
-                    {errors.issueType && <p className="mt-1 text-sm text-red-500">{errors.issueType}</p>}
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
-                      Location
-                    </label>
-                    <input
-                      type="text"
-                      id="location"
-                      name="location"
-                      value={formData.location}
-                      onChange={handleChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      placeholder="e.g. Garage, Level 3 hallway, unit 101"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                      Description *
-                    </label>
-                    <textarea
-                      id="description"
-                      name="description"
-                      value={formData.description}
-                      onChange={handleChange}
-                      rows={4}
-                      className={`w-full p-2 border rounded-md ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
-                      placeholder="Please provide a detailed description of the issue..."
-                    ></textarea>
-                    {errors.description && <p className="mt-1 text-sm text-red-500">{errors.description}</p>}
-                  </div>
-                  
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
-                        Priority
-                      </label>
-                      <select
-                        id="priority"
-                        name="priority"
-                        value={formData.priority}
-                        onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                      >
-                        <option value="Low">Low</option>
-                        <option value="Normal">Normal</option>
-                        <option value="High">High</option>
-                        <option value="Urgent">Urgent</option>
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label htmlFor="preferredContact" className="block text-sm font-medium text-gray-700 mb-1">
-                        Preferred Contact Method
-                      </label>
-                      <select
-                        id="preferredContact"
-                        name="preferredContact"
-                        value={formData.preferredContact}
-                        onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                      >
-                        <option value="Email">Email</option>
-                        <option value="Phone">Phone</option>
-                        <option value="Either">Either</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="attachFile" className="block text-sm font-medium text-gray-700 mb-1">
-                      Attach Files (optional)
-                    </label>
-                    <input
-                      type="file"
-                      id="attachFile"
-                      name="attachFile"
-                      onChange={handleFileChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      accept="image/*,.pdf"
-                    />
-                    <p className="mt-1 text-sm text-gray-500">
-                      You can attach photos or documents related to the issue (max 5MB)
-                    </p>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="consent"
-                      name="consent"
-                      className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-                      required
-                    />
-                    <label htmlFor="consent" className="ml-2 block text-sm text-gray-700">
-                      I consent to the collection and storage of the personal information provided in this form *
-                    </label>
-                  </div>
-                  
-                  <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className={`bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition ${
-                        isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
-                      }`}
-                    >
-                      {isSubmitting ? 'Submitting...' : `Submit via ${submitMethod}`}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
+            <Suspense fallback={<div className="md:col-span-2 p-6 bg-white rounded-lg shadow-md">Loading form...</div>}>
+              <ReportIssueForm />
+            </Suspense>
             
             <div>
               <div className="bg-blue-50 rounded-lg shadow-md p-6 mb-6">

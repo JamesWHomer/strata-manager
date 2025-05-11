@@ -65,7 +65,7 @@ export default function Maintenance() {
   ];
 
   // State for the maintenance requests
-  const [requests, setRequests] = useState(initialRequests);
+  const [requests] = useState(initialRequests);
   
   // State for the selected request
   const [selectedRequest, setSelectedRequest] = useState<string | null>(null);

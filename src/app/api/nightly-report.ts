@@ -13,7 +13,8 @@ export const config = {
  * 
  * For this demo, we're just returning a sample response.
  */
-export async function GET(request: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function GET(_request: NextRequest) {
   // In a real application, we would fetch data from a database,
   // generate reports, send emails, etc.
   

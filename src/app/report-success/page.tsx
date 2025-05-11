@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
-export default function ReportSuccess() {
+// Wrap the component that uses useSearchParams in Suspense
+function SearchParamsContent() {
   const searchParams = useSearchParams();
   const [submissionMethod, setSubmissionMethod] = useState<string>('');
   const [submissionData, setSubmissionData] = useState<Record<string, string>>({});
@@ -31,6 +32,66 @@ export default function ReportSuccess() {
     setSubmissionData(prev => ({ ...prev, referenceNumber: refNumber }));
   }, [searchParams]);
 
+  return (
+    <>
+      <div className="bg-blue-50 p-4 rounded-md mb-6">
+        <p className="text-center font-medium">Your reference number is:</p>
+        <p className="text-center text-2xl font-bold text-blue-700 my-2">
+          {submissionData.referenceNumber || 'Processing...'}
+        </p>
+        <p className="text-center text-sm text-gray-600">
+          Please save this number for future reference.
+        </p>
+      </div>
+      
+      <div className="mb-6">
+        <p className="font-medium mb-2">What happens next?</p>
+        <ol className="list-decimal pl-5 space-y-2 text-gray-700">
+          <li>You will receive a confirmation email shortly.</li>
+          <li>Your issue will be reviewed by the building manager or strata committee.</li>
+          <li>You will be updated on any progress or resolution.</li>
+          <li>You can follow up by quoting your reference number.</li>
+        </ol>
+      </div>
+      
+      {submissionMethod === 'GET' && (
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-3">Submission Details (GET Request)</h2>
+          <div className="bg-gray-50 p-4 rounded-md">
+            <div className="grid grid-cols-2 gap-2">
+              {Object.entries(submissionData)
+                .filter(([key]) => key !== 'referenceNumber' && key !== 'method')
+                .map(([key, value]) => (
+                  <div key={key} className="py-1">
+                    <span className="font-medium">{key.charAt(0).toUpperCase() + key.slice(1)}:</span> {value}
+                  </div>
+                ))}
+            </div>
+          </div>
+          <p className="text-sm text-gray-500 mt-2">
+            Note: This data was submitted via a GET request and is visible in the URL.
+          </p>
+        </div>
+      )}
+      
+      {submissionMethod === 'POST' && (
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-3">Submission Details (POST Request)</h2>
+          <div className="bg-gray-50 p-4 rounded-md">
+            <p>
+              Your data was submitted via POST request. This method is more secure as the data is not visible in the URL.
+            </p>
+            <p className="mt-2">
+              Check your browser's network inspector to see the POST request details.
+            </p>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+export default function ReportSuccess() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navigation */}
@@ -75,59 +136,9 @@ export default function ReportSuccess() {
                 Thank you for submitting your issue report. We have received your information and will take appropriate action.
               </p>
               
-              <div className="bg-blue-50 p-4 rounded-md mb-6">
-                <p className="text-center font-medium">Your reference number is:</p>
-                <p className="text-center text-2xl font-bold text-blue-700 my-2">
-                  {submissionData.referenceNumber || 'Processing...'}
-                </p>
-                <p className="text-center text-sm text-gray-600">
-                  Please save this number for future reference.
-                </p>
-              </div>
-              
-              <div className="mb-6">
-                <p className="font-medium mb-2">What happens next?</p>
-                <ol className="list-decimal pl-5 space-y-2 text-gray-700">
-                  <li>You will receive a confirmation email shortly.</li>
-                  <li>Your issue will be reviewed by the building manager or strata committee.</li>
-                  <li>You will be updated on any progress or resolution.</li>
-                  <li>You can follow up by quoting your reference number.</li>
-                </ol>
-              </div>
-              
-              {submissionMethod === 'GET' && (
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-3">Submission Details (GET Request)</h2>
-                  <div className="bg-gray-50 p-4 rounded-md">
-                    <div className="grid grid-cols-2 gap-2">
-                      {Object.entries(submissionData)
-                        .filter(([key]) => key !== 'referenceNumber' && key !== 'method')
-                        .map(([key, value]) => (
-                          <div key={key} className="py-1">
-                            <span className="font-medium">{key.charAt(0).toUpperCase() + key.slice(1)}:</span> {value}
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Note: This data was submitted via a GET request and is visible in the URL.
-                  </p>
-                </div>
-              )}
-              
-              {submissionMethod === 'POST' && (
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-3">Submission Details (POST Request)</h2>
-                  <div className="bg-gray-50 p-4 rounded-md">
-                    <p>
-                      Your data was submitted via POST request. This method is more secure as the data is not visible in the URL.
-                    </p>
-                    <p className="mt-2">
-                      Check your browser's network inspector to see the POST request details.
-                    </p>
-                  </div>
-                </div>
-              )}
+              <Suspense fallback={<div className="text-center p-4">Loading submission details...</div>}>
+                <SearchParamsContent />
+              </Suspense>
               
               <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
                 <Link href="/" className="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition text-center">

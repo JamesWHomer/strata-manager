@@ -27,7 +27,8 @@ const owners = [
  * 
  * For this demo, we're just returning sample response data.
  */
-export async function GET(request: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function GET(_request: NextRequest) {
   // Get current date info for reporting
   const now = new Date();
   const formattedDate = now.toISOString().split('T')[0];
