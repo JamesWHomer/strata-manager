@@ -1,0 +1,67 @@
+{
+  "regions": ["syd1"],
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "memory": 256,
+      "maxDuration": 10
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    { 
+      "source": "/about", 
+      "destination": "/committee", 
+      "permanent": true 
+    }
+  ],
+  "rewrites": [
+    { 
+      "source": "/levy/status", 
+      "destination": "/api/levy-status" 
+    }
+  ],
+  "crons": {
+    "0 0 * * *": "api/nightly-report.ts",
+    "0 9 1 * *": "api/monthly-levy-reminder.ts"
+  },
+  "github": {
+    "enabled": true,
+    "silent": false
+  },
+  "buildCommand": "next build",
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet ./",
+  "framework": "nextjs"
+} 
