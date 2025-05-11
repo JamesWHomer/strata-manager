@@ -53,10 +53,16 @@
       "destination": "/api/levy-status" 
     }
   ],
-  "crons": {
-    "0 0 * * *": "api/nightly-report.ts",
-    "0 9 1 * *": "api/monthly-levy-reminder.ts"
-  },
+  "crons": [
+    { 
+      "path": "/api/nightly-report", 
+      "schedule": "0 0 * * *" 
+    },
+    { 
+      "path": "/api/monthly-levy-reminder", 
+      "schedule": "0 9 1 * *" 
+    }
+  ],
   "github": {
     "enabled": true,
     "silent": false
