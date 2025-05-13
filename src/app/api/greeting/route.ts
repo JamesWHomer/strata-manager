@@ -23,11 +23,14 @@ export async function GET(request: NextRequest) {
     greeting = 'Good evening';
   }
   
+  // Get building name from environment variable or use default
+  const buildingName = process.env.BUILDING_NAME || 'ABC Apartments';
+  
   // Build the response
   const message = {
     greeting: `${greeting}, ${name}${lotNumber ? ` from Lot ${lotNumber}` : ''}!`,
     timestamp: now.toISOString(),
-    message: "Welcome to the ABC Apartments Strata Portal",
+    message: `Welcome to the ${buildingName} Strata Portal`,
   };
   
   // Return the response with proper headers

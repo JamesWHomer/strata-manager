@@ -22,11 +22,19 @@ export async function GET(_request: NextRequest) {
   const now = new Date();
   const formattedDate = now.toISOString().split('T')[0];
   
+  // Get building and administrator details from environment variables
+  const buildingName = process.env.BUILDING_NAME || 'ABC Apartments';
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
+  const strataManagerName = process.env.STRATA_MANAGER_NAME || 'Property Management Inc.';
+  
   // Mock report data
   const reportData = {
     generatedAt: now.toISOString(),
     reportDate: formattedDate,
-    reportName: `Daily Summary ${formattedDate}`,
+    reportName: `${buildingName} Daily Summary ${formattedDate}`,
+    buildingName,
+    adminEmail,
+    strataManager: strataManagerName,
     buildingStatus: "Normal",
     newMaintenanceIssues: 3,
     resolvedMaintenanceIssues: 2,
@@ -37,12 +45,12 @@ export async function GET(_request: NextRequest) {
     securityIncidents: 0
   };
   
-  console.log(`Generated nightly report for ${formattedDate}`);
+  console.log(`Generated nightly report for ${buildingName} on ${formattedDate}`);
   
   // Return report data
   return NextResponse.json({
     success: true,
-    message: `Generated daily report for ${formattedDate}`,
+    message: `Generated daily report for ${buildingName} on ${formattedDate}`,
     report: reportData
   }, {
     status: 200,

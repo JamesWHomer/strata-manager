@@ -30,18 +30,21 @@ type LevyDataType = {
   [key: string]: LotData;
 };
 
+// Get default due date from environment variables or use fallback
+const defaultDueDate = process.env.DEFAULT_DUE_DATE || '2023-12-15';
+
 // Mock data - in a real app, this would come from a database
 const levyData: LevyDataType = {
   '101': { 
     ownerId: 'O1001',
     ownerName: 'John Smith',
     adminFund: { 
-      dueDate: '2023-12-15', 
+      dueDate: defaultDueDate, 
       amountDue: 750.00, 
       paid: false 
     },
     capitalWorksFund: { 
-      dueDate: '2023-12-15', 
+      dueDate: defaultDueDate, 
       amountDue: 450.00, 
       paid: true 
     },
@@ -55,12 +58,12 @@ const levyData: LevyDataType = {
     ownerId: 'O1002',
     ownerName: 'Jane Brown',
     adminFund: { 
-      dueDate: '2023-12-15', 
+      dueDate: defaultDueDate, 
       amountDue: 750.00, 
       paid: true 
     },
     capitalWorksFund: { 
-      dueDate: '2023-12-15', 
+      dueDate: defaultDueDate, 
       amountDue: 450.00, 
       paid: true 
     },
@@ -74,12 +77,12 @@ const levyData: LevyDataType = {
     ownerId: 'O1003',
     ownerName: 'David Wilson',
     adminFund: { 
-      dueDate: '2023-12-15', 
+      dueDate: defaultDueDate, 
       amountDue: 850.00, 
       paid: false 
     },
     capitalWorksFund: { 
-      dueDate: '2023-12-15', 
+      dueDate: defaultDueDate, 
       amountDue: 500.00, 
       paid: false 
     },
@@ -96,10 +99,14 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const lotNumber = searchParams.get('lot');
   
+  // Building name from environment variable
+  const buildingName = process.env.BUILDING_NAME || 'ABC Apartments';
+  
   // If no lot number provided or lot doesn't exist
   if (!lotNumber || !levyData[lotNumber]) {
     return NextResponse.json({ 
       error: 'Lot number not found',
+      buildingName,
       validLots: Object.keys(levyData)
     }, {
       status: 404,
@@ -120,6 +127,7 @@ export async function GET(request: NextRequest) {
   // Construct response data
   const responseData = {
     lotNumber,
+    buildingName,
     ownerName: lotData.ownerName,
     nextPaymentDate: lotData.adminFund.dueDate,
     totalDue,

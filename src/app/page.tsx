@@ -44,13 +44,13 @@ export default function Home() {
           </div>
           <div className="md:w-1/2 flex justify-center">
             <div className="w-full max-w-md h-64 bg-white rounded-lg shadow-lg relative overflow-hidden">
-              <Image 
+        <Image
                 src="/building-image.jpg" 
                 alt="ABC Apartments Building" 
                 fill 
                 className="object-cover"
-                priority
-              />
+          priority
+        />
             </div>
           </div>
         </div>

@@ -4,18 +4,21 @@ export const config = {
   runtime: 'edge'
 };
 
+// Get default due date from environment variables
+const defaultDueDate = process.env.DEFAULT_DUE_DATE || '2023-12-15';
+
 // Dummy data - in a real application, this would come from a database
 const owners = [
   { id: 'O1001', name: 'John Smith', email: 'john.smith@example.com', lotNumber: '101', 
-    hasDuePayment: true, amountDue: 750.00, dueDate: '2023-12-15' },
+    hasDuePayment: true, amountDue: 750.00, dueDate: defaultDueDate },
   { id: 'O1002', name: 'Jane Brown', email: 'jane.brown@example.com', lotNumber: '102', 
-    hasDuePayment: false, amountDue: 0, dueDate: '2023-12-15' },
+    hasDuePayment: false, amountDue: 0, dueDate: defaultDueDate },
   { id: 'O1003', name: 'David Wilson', email: 'david.wilson@example.com', lotNumber: '201', 
-    hasDuePayment: true, amountDue: 1350.00, dueDate: '2023-12-15' },
+    hasDuePayment: true, amountDue: 1350.00, dueDate: defaultDueDate },
   { id: 'O1004', name: 'Sarah Johnson', email: 'sarah.j@example.com', lotNumber: '202', 
-    hasDuePayment: true, amountDue: 1200.00, dueDate: '2023-12-15' },
+    hasDuePayment: true, amountDue: 1200.00, dueDate: defaultDueDate },
   { id: 'O1005', name: 'Michael Chen', email: 'michael.c@example.com', lotNumber: '301', 
-    hasDuePayment: false, amountDue: 0, dueDate: '2023-12-15' }
+    hasDuePayment: false, amountDue: 0, dueDate: defaultDueDate }
 ];
 
 /**
@@ -33,6 +36,11 @@ export async function GET(_request: NextRequest) {
   const now = new Date();
   const formattedDate = now.toISOString().split('T')[0];
   
+  // Get building and administrator details from environment variables
+  const buildingName = process.env.BUILDING_NAME || 'ABC Apartments';
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
+  const strataManagerName = process.env.STRATA_MANAGER_NAME || 'Property Management Inc.';
+  
   // Filter owners who have payments due
   const ownersWithDuePayments = owners.filter(owner => owner.hasDuePayment);
   
@@ -46,6 +54,9 @@ export async function GET(_request: NextRequest) {
   const reminderData = {
     generatedAt: now.toISOString(),
     reminderDate: formattedDate,
+    buildingName,
+    adminEmail,
+    strataManager: strataManagerName,
     totalOwnersNotified: ownersWithDuePayments.length,
     totalOwners: owners.length,
     totalAmountDue: totalDue,
@@ -53,12 +64,12 @@ export async function GET(_request: NextRequest) {
     emailsSent: ownersWithDuePayments.length
   };
   
-  console.log(`Generated monthly levy reminders for ${formattedDate}`);
+  console.log(`Generated monthly levy reminders for ${buildingName} on ${formattedDate}`);
   
   // Return response data
   return NextResponse.json({
     success: true,
-    message: `Sent ${ownersWithDuePayments.length} levy reminder emails`,
+    message: `Sent ${ownersWithDuePayments.length} levy reminder emails for ${buildingName}`,
     data: reminderData
   }, {
     status: 200,
