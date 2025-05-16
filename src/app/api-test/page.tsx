@@ -87,7 +87,8 @@ function ApiTestContent() {
 
   // Function to test redirect API
   const testRedirect = () => {
-    window.open(`/api/redirect-late?lot=${lotNumber}`, '_blank');
+    // Using window.location in the same window to avoid deployment ID issues
+    window.location.href = `/api/redirect-late?lot=${lotNumber}`;
   };
 
   return (
