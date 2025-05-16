@@ -80,11 +80,12 @@ const levyData: LevyDataType = {
  * Demonstrates proper use of HTTP status codes for redirection (3xx series)
  */
 export async function GET(request: NextRequest) {
-  // Get base URL from environment variable or use the request URL
-  const baseUrl = process.env.BASE_URL || request.url;
+  // Extract the URL and get just the origin (e.g., http://localhost:3000)
+  const url = new URL(request.url);
+  const origin = url.origin;
   
   // Get lot number from query parameters
-  const { searchParams } = new URL(request.url);
+  const { searchParams } = url;
   const lotNumber = searchParams.get('lot');
   
   // Building name from environment variable
@@ -108,7 +109,7 @@ export async function GET(request: NextRequest) {
   // If lot doesn't exist
   if (!levyData[lotNumber]) {
     // 303 See Other - Redirect to error page
-    return NextResponse.redirect(new URL('/error?reason=lot-not-found', baseUrl), 303);
+    return NextResponse.redirect(`${origin}/error?reason=lot-not-found`, 303);
   }
   
   // Get data for the requested lot
@@ -123,10 +124,9 @@ export async function GET(request: NextRequest) {
   
   if (hasUnpaidLevies) {
     // 302 Found - Temporary redirect to payment page
-    const paymentURL = new URL(`/payment?lot=${lotNumber}&amount=${totalDue}`, baseUrl);
-    return NextResponse.redirect(paymentURL, 302);
+    return NextResponse.redirect(`${origin}/payment?lot=${lotNumber}&amount=${totalDue}`, 302);
   } else {
     // 307 Temporary Redirect - Redirect to dashboard
-    return NextResponse.redirect(new URL(`/dashboard?lot=${lotNumber}`, baseUrl), 307);
+    return NextResponse.redirect(`${origin}/dashboard?lot=${lotNumber}`, 307);
   }
 } 
