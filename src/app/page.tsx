@@ -18,6 +18,7 @@ export default function Home() {
             <Link href="/meetings" className="hover:underline">Meetings</Link>
             <Link href="/contacts" className="hover:underline">Contacts</Link>
             <Link href="/report-issue" className="hover:underline">Report Issue</Link>
+            <Link href="/api-test" className="hover:underline">API Demo</Link>
           </nav>
           <button className="md:hidden">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
@@ -87,6 +88,53 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-2">Levy Payments</h3>
               <p className="text-gray-600">View and pay your strata levies online with real-time balance updates.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* API Features Section */}
+      <section className="py-16 bg-gray-100">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-6">Powered by Serverless Functions</h2>
+          <p className="text-gray-600 text-center mb-12 max-w-3xl mx-auto">Our strata management system leverages modern serverless architecture for fast, reliable, and scalable performance.</p>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Automated Reminders</h3>
+              <p className="text-gray-600">Serverless functions automatically send levy payment reminders on the first day of each month.</p>
+              <Link href="/api-test" className="text-blue-600 hover:underline mt-3 inline-block">
+                See it in action →
+              </Link>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Real-time Levy Status</h3>
+              <p className="text-gray-600">Edge functions provide instant access to your levy payment status and history.</p>
+              <Link href="/api-test" className="text-blue-600 hover:underline mt-3 inline-block">
+                Try it now →
+              </Link>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Personalized Experience</h3>
+              <p className="text-gray-600">Our greeting API provides a personalized experience tailored to each resident.</p>
+              <Link href="/api-test" className="text-blue-600 hover:underline mt-3 inline-block">
+                Test it yourself →
+              </Link>
             </div>
           </div>
         </div>

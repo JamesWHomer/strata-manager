@@ -79,11 +79,27 @@ The `vercel.json` file includes configurations for:
 
 ## Serverless Edge Functions
 
-This project includes three serverless edge functions:
+This project includes several serverless edge functions that power the strata management platform:
 
-1. `/api/greeting`: Returns a personalized greeting based on the time of day and name provided
-2. `/api/levy-status`: Fetches and returns levy payment status for a specific lot
+1. `/api/greeting`: Returns a personalized greeting based on the time of day, name, and lot number
+2. `/api/levy-status`: Fetches and returns levy payment status and history for a specific lot
 3. `/api/redirect-late`: Checks levy status and redirects to appropriate pages based on payment status
+4. `/api/nightly-report`: Generates daily building activity reports (runs via cron job at midnight)
+5. `/api/monthly-levy-reminder`: Sends levy payment reminders (runs via cron job on the 1st of each month)
+
+### API Testing Page
+
+A dedicated page at `/api-test` has been created to demonstrate the functionality of these serverless functions. This page allows you to:
+
+- Test the greeting API with customizable name and lot number
+- View levy status information for different lots
+- Experience the redirect functionality based on payment status
+- Learn about the difference between regular serverless functions and edge functions
+
+Edge functions are particularly well-suited for strata management applications due to their:
+- Lower latency (running at the edge, closer to users)
+- Faster cold starts
+- Better performance for time-sensitive operations
 
 ## Form Processing
 
