@@ -1,40 +1,38 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import Layout from '../components/Layout';
 
 function ErrorContent() {
-  const searchParams = useSearchParams();
-  const reason = searchParams.get('reason');
-
-  let errorMessage = "An unknown error occurred.";
-  if (reason === 'lot-not-found') {
-    errorMessage = "The lot number you specified could not be found.";
-  }
-
   return (
-    <div className="bg-white rounded-lg shadow-md p-8 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-red-600">Error</h1>
-      
-      <div className="bg-red-50 p-6 rounded-lg mb-6">
-        <h2 className="text-xl font-semibold mb-4">Something went wrong</h2>
-        <div className="bg-red-100 p-4 rounded-md border border-red-300">
-          <p className="text-red-800">
-            {errorMessage}
-          </p>
+    <div className="bg-white rounded-lg shadow-md p-8 max-w-2xl mx-auto text-center">
+      <div className="mb-6 flex justify-center">
+        <div className="bg-red-100 rounded-full p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
         </div>
-        <p className="text-gray-700 mt-4">
-          This is a placeholder error page demonstrating the redirect API functionality.
-        </p>
       </div>
       
-      <div className="flex justify-between">
-        <Link href="/api-test" className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition">
-          Back to API Test
+      <h1 className="text-3xl font-bold mb-4 text-red-700">Error</h1>
+      <p className="text-gray-700 mb-6">We couldn't find the information you're looking for. The lot number may be invalid or not exist in our system.</p>
+      
+      <div className="bg-red-50 p-6 rounded-lg mb-8 text-left">
+        <h2 className="text-xl font-semibold mb-4">What to do next:</h2>
+        <ul className="list-disc pl-5 space-y-2 text-gray-700">
+          <li>Check that you have entered the correct lot number</li>
+          <li>Contact your strata manager if you're having trouble accessing your information</li>
+          <li>Return to the home page and try again</li>
+        </ul>
+      </div>
+      
+      <div className="flex justify-center space-x-4">
+        <Link href="/" className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition">
+          Return Home
         </Link>
-        <Link href="/" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">
-          Go to Home
+        <Link href="/api-test" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">
+          Back to API Test
         </Link>
       </div>
     </div>
@@ -43,38 +41,10 @@ function ErrorContent() {
 
 export default function ErrorPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Navigation */}
-      <header className="bg-blue-700 text-white shadow-md">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <span className="font-bold text-xl">StrataManager</span>
-          </div>
-          <nav className="hidden md:flex space-x-6">
-            <Link href="/" className="hover:underline">Home</Link>
-            <Link href="/committee" className="hover:underline">Committee</Link>
-            <Link href="/api-test" className="hover:underline">API Test</Link>
-          </nav>
-        </div>
-      </header>
-
-      {/* Page Content */}
-      <main className="flex-grow">
-        <div className="container mx-auto px-4 py-8">
-          <Suspense fallback={<div className="text-center p-8">Loading...</div>}>
-            <ErrorContent />
-          </Suspense>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8 mt-auto">
-        <div className="container mx-auto px-4">
-          <div className="border-t border-gray-700 mt-8 pt-6 text-sm text-gray-400">
-            <p>&copy; {new Date().getFullYear()} StrataManager. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-    </div>
+    <Layout>
+      <Suspense fallback={<div className="text-center p-8">Loading...</div>}>
+        <ErrorContent />
+      </Suspense>
+    </Layout>
   );
 } 

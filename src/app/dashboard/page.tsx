@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import Layout from '../components/Layout';
 
 function DashboardContent() {
   const searchParams = useSearchParams();
@@ -41,38 +42,10 @@ function DashboardContent() {
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Navigation */}
-      <header className="bg-blue-700 text-white shadow-md">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <span className="font-bold text-xl">StrataManager</span>
-          </div>
-          <nav className="hidden md:flex space-x-6">
-            <Link href="/" className="hover:underline">Home</Link>
-            <Link href="/committee" className="hover:underline">Committee</Link>
-            <Link href="/api-test" className="hover:underline">API Test</Link>
-          </nav>
-        </div>
-      </header>
-
-      {/* Page Content */}
-      <main className="flex-grow">
-        <div className="container mx-auto px-4 py-8">
-          <Suspense fallback={<div className="text-center p-8">Loading...</div>}>
-            <DashboardContent />
-          </Suspense>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8 mt-auto">
-        <div className="container mx-auto px-4">
-          <div className="border-t border-gray-700 mt-8 pt-6 text-sm text-gray-400">
-            <p>&copy; {new Date().getFullYear()} StrataManager. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-    </div>
+    <Layout>
+      <Suspense fallback={<div className="text-center p-8">Loading...</div>}>
+        <DashboardContent />
+      </Suspense>
+    </Layout>
   );
 } 
