@@ -96,12 +96,30 @@ function ReportIssueForm() {
         router.push(`/report-success?${queryParams.toString()}`);
       }, 1000);
     } else {
-      // For POST submission - would normally send to server
-      // Simulating a POST request with delay
-      setTimeout(() => {
-        console.log('Submitted form data via POST:', formData);
-        router.push('/report-success');
-      }, 1000);
+      try {
+        const response = await fetch('/api/report-issue', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ ...formData, attachFile: undefined })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData?.error || 'Failed to submit');
+        }
+
+        const result = await response.json();
+        console.log('Submitted form data via POST:', result);
+
+        // Pass reference number via query param for easy display
+        router.push(`/report-success?ref=${result.referenceNumber}&method=POST`);
+      } catch (err: any) {
+        alert(`Submission failed: ${err.message}`);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
   
